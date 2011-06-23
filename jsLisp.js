@@ -55,3 +55,31 @@ var cons = function(x,y) {
   }
 }
 
+var cond = function(x) {
+  x.map(function(element) {
+    if (evaluate(element[0])) {
+      return element[1];
+    }
+  });
+}
+
+
+/*
+ * Some functions
+ */
+
+var _null = function(x) {
+  return(eq(x, null));
+}
+
+var _and = function(x,y) {
+  return eq(evaluate(x), evaluate(y))    
+}
+
+var _not = function(x) {
+  return cond([[x, []],[True, True]]);
+}
+  
+var _append = function(x, y) {
+    
+}
