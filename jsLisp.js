@@ -1,85 +1,120 @@
-var quote = function(x) {
-  return x;
-}
+var lispObject = {
+  /*
+   * Seven primitive operators
+   */
 
-var atom = function(x) {
-  if (x) {
-    var typeOfX = typeof x;
+  quote: function(x) {
+    return x;
+  },
 
-    if (typeOfX === 'object') {
-      if (x instanceof Array) {
+  atom: function(x) {
+    if (x) {
+      var typeOfX = typeof x;
+
+      if (checkIsArray(x)) {
         if (x.length === 0) {
-          return "t";
+            return 1;
 	}
-        else {
-          return [];
-        }
+      }
+      else if (typeOfX === 'number' || typeOfX === 'string') {
+        return 1;
       }
     }
-    else if (typeOfX === 'number' || typeOfX === 'string') {
-      return "t";
+  },
+
+  eq: function(x,y) {
+    if (x === y) {
+      return 1;
     }
-    else {
-      return [];
+  },
+
+  car: function(x) {
+    if (checkIsArray(x)) {
+      return x.shift();    
     }
-  }
-  else {
-      return [];
-  }
-}
+  },
 
-var eq = function(x,y) {
-  if (x === y) {
-    return "t";
-  }
-  else  
-    return [];
-}
-
-var car = function(x) {
-  if (x && (x instanceof Array)) {
-    return x.shift();    
-  }
-}
-
-var cdr = function(x) {
-  if (x && (x instanceof Array)) {
-    x.shift();    
-    return x;
-  }
-}
-
-var cons = function(x,y) {
-  if (y instanceof Array) {
-    return y.unshift(x);
-  }
-}
-
-var cond = function(x) {
-  x.map(function(element) {
-    if (evaluate(element[0])) {
-      return element[1];
+  cdr: function(x) {
+    if (checkIsArray(x)) {
+      x.shift();
+      return x;
     }
-  });
-}
+  },
+
+  cons: function(x,y) {
+    if (x && checkIsArray(y)) {
+      return y.unshift(x);
+    }
+  },
+
+  cond: function(x) {
+    if (checkIsArray(x)) {
+      x.map(function(element) {
+        if (checkIsArray(element) && evaluate(element[0])) {
+          return element[1];
+        }
+      });
+    }
+  },
 
 
-/*
- * Some functions
- */
+  /*
+   * Some functions
+   */
 
-var _null = function(x) {
-  return(eq(x, null));
-}
+  _null: function(x) {
+    return(eq(x, null));
+  },
 
-var _and = function(x,y) {
-  return eq(evaluate(x), evaluate(y))    
-}
+  _and: function(x,y) {
+    return eq(evaluate(x), evaluate(y))    
+  },
 
-var _not = function(x) {
-  return cond([[x, []],[True, True]]);
-}
+  _not: function(x) {
+    return cond([[x, []],[True, True]]);
+  },
   
-var _append = function(x, y) {
-    
+  _append: function(x, y) {
+    return "not implemented";  
+    },
+  
+  evaluate: function(input) {
+    if (checkIsArray(input) && input.length > 1) {
+      var operator = input.shift();
+
+      if ((typeof operator) === 'string') { 
+        switch (operator) {
+          case "quote":
+            this.quote(input);
+            alert(input);
+            break;
+          case "atom":
+            break;
+          case "eq":
+            break;
+          case "car":
+            break;
+          case "cons":
+            break;
+          case "cond":
+            break;
+          case "quote":
+            break;
+          default:
+            break;      
+        }
+      }
+    }  
+  }
+}
+
+var checkIsArray = function(input) {  
+  if (input) {
+    var typeOfInput = typeof input;  
+    if (typeOfInput === 'object') {
+      if (input instanceof Array) {
+	return 1;
+      }
+    }
+  }
 }
