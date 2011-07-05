@@ -12,8 +12,8 @@ var lispObject = {
       var typeOfX = typeof x;
 
       if (checkIsArray(x)) {
-        if (x.length === 0) {
-            return 1;
+        if (x.length < 1) {
+          return 1;
 	}
       }
       else if (typeOfX === 'number' || typeOfX === 'string') {
@@ -75,40 +75,56 @@ var lispObject = {
   },
   
   _append: function(x, y) {
-    return "not implemented";  
-    },
+    return "not inplemented";  
+  },
   
   evaluate: function(input) {
     if (checkIsArray(input) && input.length > 1) {
       var operator = input.shift();
 
-      if ((typeof operator) === 'string') { 
-        switch (operator) {
-          case "quote":
-            this.quote(input);
-            alert(input);
-            break;
-          case "atom":
-            break;
-          case "eq":
-            break;
-          case "car":
-            break;
-          case "cons":
-            break;
-          case "cond":
-            break;
-          case "quote":
-            break;
-          default:
-            break;      
+      if (input.length > 1) {
+        if ((typeof operator) === 'string') { 
+          switch (operator) {
+            case "quote":
+              return this.quote(input);
+            case "atom":
+              return this.atom(input);
+            case "eq":
+              return this.eq(input);
+            case "car":
+              return this.car(input);
+	    case "cdr":
+              return this.cdr(input);
+            case "cons":
+              return this.cons(input);
+            case "cond":
+              return this.cond(input);
+            case "_null":
+              return this._null(input);
+            case "_and":
+              return this._and(input);
+            case "_not":
+              return this._not(input);
+            default:
+              alert("oh crap. no such command");
+              break;      
+          }
         }
-      }
+      }      
+      else if ( input.length == 1) {
+        if (checkIsArray(input[0])) {
+          this.evaluate(input[0]);
+        }
+        else {
+          arguments
+        } 
+      }      
     }  
   }
 }
 
 var checkIsArray = function(input) {  
+  var typeOfInput;
   if (input) {
     var typeOfInput = typeof input;  
     if (typeOfInput === 'object') {
